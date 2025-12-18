@@ -8,9 +8,7 @@ const FeaturesSection = () => {
   const navigate = useNavigate();
 
   const {cars} = useAppContext()
-  console.log(cars);
   
-
   const goToCarsPage = () => {
     navigate(`/cars`);
     window.scrollTo(0, 0);
@@ -62,7 +60,7 @@ const FeaturesSection = () => {
         {/* Cars Grid */}
         <div className="max-w-[1600px] mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {cars.map((car, index) => (
+            {cars.slice(0,4).map((car, index) => (
               <div key={car._id} className="group relative">
                 
                 {/* Card Glow */}
