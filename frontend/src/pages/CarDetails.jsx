@@ -3,16 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
-import { 
-  ChevronLeft, 
-  Zap, 
-  Shield, 
-  Activity, 
-  Clock, 
-  Navigation, 
-  Calendar, 
-  CreditCard 
-} from "lucide-react";
 
 const CarDetails = () => {
   const { id } = useParams();
@@ -24,12 +14,14 @@ const CarDetails = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [isBooking, setIsBooking] = useState(false);
 
-  const carImages = car ? [
-    car.image,
-    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800",
-    "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800",
-    "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=800",
-  ] : [];
+  const carImages = car
+    ? [
+        car.image,
+        "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800",
+        "https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=800",
+        "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800",
+      ]
+    : [];
 
   useEffect(() => {
     const foundCar = cars.find((c) => c._id === id);
@@ -38,7 +30,9 @@ const CarDetails = () => {
 
   useEffect(() => {
     if (pickupDate && returnDate && car) {
-      const days = Math.ceil((new Date(returnDate) - new Date(pickupDate)) / (1000 * 60 * 60 * 24));
+      const days = Math.ceil(
+        (new Date(returnDate) - new Date(pickupDate)) / (1000 * 60 * 60 * 24)
+      );
       setTotalPrice(days > 0 ? days * car.pricePerDay : car.pricePerDay);
     } else {
       setTotalPrice(0);
@@ -48,153 +42,308 @@ const CarDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!pickupDate || !returnDate) {
-      toast.error("Telemetry Error: Dates required");
+      toast.error("Please select both pickup and return dates");
       return;
     }
+
     setIsBooking(true);
     try {
       const { data } = await axios.post("/api/bookings/create", {
-        car: id, pickupDate, returnDate,
+        car: id,
+        pickupDate,
+        returnDate,
       });
+
       if (data.success) {
-        toast.success("Reservation Synchronized");
+        toast.success(data.message);
         navigate("/my-bookings");
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Transmission Failed");
+      console.log(error.message);
+      toast.error(error.message);
     } finally {
       setIsBooking(false);
     }
   };
 
+  const features = [
+    { icon: "🎥", label: "360° Camera" },
+    { icon: "🔗", label: "Bluetooth" },
+    { icon: "📍", label: "GPS Navigation" },
+    { icon: "🔥", label: "Heated Seats" },
+    { icon: "📱", label: "Apple CarPlay" },
+    { icon: "🔑", label: "Keyless Entry" },
+    { icon: "🌡️", label: "Climate Control" },
+    { icon: "🛡️", label: "Safety Package" }
+  ];
+
   const specs = [
-    { label: "Engine", value: car?.engine || "V8 Biturbo", icon: <Activity size={14}/> },
-    { label: "Horsepower", value: car?.horsepower || "540 HP", icon: <Zap size={14}/> },
-    { label: "Top Speed", value: "205 MPH", icon: <Navigation size={14}/> },
+    { label: "Engine", value: car?.engine || "2.0L Turbo" },
+    { label: "Horsepower", value: car?.horsepower || "250 HP" },
+    { label: "0-60 mph", value: car?.acceleration || "6.2s" },
+    { label: "Fuel Economy", value: car?.fuelEconomy || "28 MPG" },
+    { label: "Luggage", value: car?.luggage || "2 Large Bags" },
+    { label: "Color", value: car?.color || "Metallic Gray" }
   ];
 
   return car ? (
-    <div className="min-h-screen bg-[#050505] text-white pt-20">
-      {/* STEALTH HEADER */}
-      <div className="border-b border-white/5 bg-[#0A0A0A]/80 backdrop-blur-xl sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <button onClick={() => navigate(-1)} className="group flex items-center gap-2 text-zinc-500 hover:text-cyan-400 transition-colors uppercase text-[10px] font-black tracking-[0.2em]">
-            <ChevronLeft size={16} /> Back to Fleet
-          </button>
-          <div className="text-right">
-            <h1 className="text-xl font-black italic tracking-tighter uppercase">{car.brand} <span className="text-cyan-500">{car.model}</span></h1>
-            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{car.category} // {car.location}</p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white mt-10">
+      {/* Header with gradient background */}
+      <div className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white py-6">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-all duration-300 backdrop-blur-sm"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back to Cars
+            </button>
+            <div className="text-right">
+              <h1 className="text-2xl font-bold">{car.brand} {car.model}</h1>
+              <p className="text-blue-100">{car.category} • {car.year} • {car.location}</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid lg:grid-cols-12 gap-12">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid lg:grid-cols-3 gap-8">
           
-          {/* LEFT: VISUAL INTEL */}
-          <div className="lg:col-span-8 space-y-12">
-            <div className="relative group overflow-hidden rounded-[40px] bg-zinc-900 border border-white/5 shadow-2xl">
-              <img src={carImages[selectedImageIndex]} className="w-full h-[600px] object-cover transition-transform duration-1000 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-              
-              <div className="absolute bottom-8 left-8 flex gap-3">
-                {carImages.map((img, i) => (
-                  <button key={i} onClick={() => setSelectedImageIndex(i)} className={`w-20 h-14 rounded-xl overflow-hidden border-2 transition-all ${selectedImageIndex === i ? 'border-cyan-500 scale-110 shadow-[0_0_20px_rgba(6,182,212,0.5)]' : 'border-transparent opacity-50'}`}>
-                    <img src={img} className="w-full h-full object-cover" />
+          {/* LEFT COLUMN — Images & Details */}
+          <div className="lg:col-span-2 space-y-8">
+            
+            {/* Main Image with Gallery */}
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+              <div className="relative h-96 md:h-[500px] overflow-hidden group">
+                <img
+                  src={carImages[selectedImageIndex]}
+                  alt={`${car.brand} ${car.model}`}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                
+                {/* Price Badge */}
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-2 rounded-full shadow-lg">
+                  <span className="text-sm">Starting at</span>
+                  <div className="text-xl font-bold">${car.pricePerDay}<span className="text-sm font-normal">/day</span></div>
+                </div>
+              </div>
+
+              {/* Thumbnail Gallery */}
+              <div className="p-4 grid grid-cols-4 gap-3">
+                {carImages.map((img, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`relative overflow-hidden rounded-lg h-24 transition-all duration-300 ${
+                      selectedImageIndex === index 
+                        ? 'ring-2 ring-blue-500 ring-offset-2 transform scale-105' 
+                        : 'opacity-80 hover:opacity-100'
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`View ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* SPECS GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {specs.map((spec, i) => (
-                <div key={i} className="bg-[#0D0D0D] border border-white/5 p-6 rounded-[32px] hover:border-cyan-500/30 transition-all">
-                  <div className="text-cyan-500 mb-4">{spec.icon}</div>
-                  <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">{spec.label}</p>
-                  <p className="text-xl font-bold italic">{spec.value}</p>
-                </div>
-              ))}
+            {/* Specifications Grid */}
+            <div className="bg-white rounded-2xl shadow-xl p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b">Technical Specifications</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {specs.map((spec, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="text-sm text-gray-500">{spec.label}</div>
+                    <div className="text-lg font-semibold text-gray-900">{spec.value}</div>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="bg-[#0D0D0D] border border-white/5 p-10 rounded-[40px]">
-              <h3 className="text-[10px] font-black text-cyan-500 uppercase tracking-[0.3em] mb-6">Mission Briefing</h3>
-              <p className="text-zinc-400 leading-relaxed text-lg font-light tracking-wide">{car.description}</p>
+            {/* Features Grid */}
+            <div className="bg-white rounded-2xl shadow-xl p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b">Premium Features</h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {features.map((feature, index) => (
+                  <div key={index} className="flex items-center gap-3 p-3 hover:bg-blue-50 rounded-lg transition-colors">
+                    <span className="text-2xl">{feature.icon}</span>
+                    <span className="font-medium text-gray-800">{feature.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="bg-white rounded-2xl shadow-xl p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">About This Vehicle</h2>
+              <p className="text-gray-600 leading-relaxed text-lg">{car.description}</p>
+              
+              <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  { icon: "👥", label: "Seats", value: car.seating_capacity },
+                  { icon: "⛽", label: "Fuel", value: car.fuel_type },
+                  { icon: "⚙️", label: "Transmission", value: car.transmission },
+                  { icon: "📍", label: "Location", value: car.location }
+                ].map((item, index) => (
+                  <div key={index} className="text-center p-4 bg-gray-50 rounded-xl">
+                    <div className="text-2xl mb-2">{item.icon}</div>
+                    <div className="text-sm text-gray-500">{item.label}</div>
+                    <div className="font-semibold text-gray-900">{item.value}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* RIGHT: DEPLOYMENT CONTROL */}
-          <div className="lg:col-span-4">
-            <div className="sticky top-32 bg-[#0D0D0D] border border-white/10 p-8 rounded-[40px] shadow-2xl">
-              <div className="flex justify-between items-end mb-8">
+          {/* RIGHT COLUMN — Booking Form */}
+          <div className="space-y-6">
+            {/* Booking Card */}
+            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-6 sticky top-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">Book Now</h2>
+                <div className="text-right">
+                  <div className="text-sm text-gray-500">Daily Rate</div>
+                  <div className="text-3xl font-bold text-blue-600">${car.pricePerDay}</div>
+                </div>
+              </div>
+
+              {/* Date Selection */}
+              <div className="space-y-4">
                 <div>
-                  <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Rate / 24H</p>
-                  <h2 className="text-4xl font-black italic">${car.pricePerDay}</h2>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Pick-up Date & Time
+                  </label>
+                  <input
+                    type="date"
+                    value={pickupDate}
+                    onChange={(e) => setPickupDate(e.target.value)}
+                    min={new Date().toISOString().split("T")[0]}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                    required
+                  />
+                  <div className="mt-2 text-sm text-gray-500">Select your preferred pick-up date</div>
                 </div>
-                <div className="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter border border-emerald-500/20">
-                  ● Status: Available
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Return Date & Time
+                  </label>
+                  <input
+                    type="date"
+                    value={returnDate}
+                    onChange={(e) => setReturnDate(e.target.value)}
+                    min={pickupDate || new Date().toISOString().split("T")[0]}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                    required
+                  />
+                  <div className="mt-2 text-sm text-gray-500">Select your return date</div>
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-4">
-                  <div className="relative">
-                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={16} />
-                    <input 
-                      type="date" 
-                      value={pickupDate}
-                      onChange={(e) => setPickupDate(e.target.value)}
-                      className="w-full bg-black border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:border-cyan-500 focus:ring-0 transition-all"
-                    />
+              {/* Price Summary */}
+              {totalPrice > 0 && (
+                <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-gray-700">Daily Rate</span>
+                    <span className="font-semibold">${car.pricePerDay} × {Math.ceil((new Date(returnDate) - new Date(pickupDate)) / (1000 * 60 * 60 * 24))} days</span>
                   </div>
-                  <div className="relative">
-                    <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={16} />
-                    <input 
-                      type="date" 
-                      value={returnDate}
-                      onChange={(e) => setReturnDate(e.target.value)}
-                      className="w-full bg-black border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:border-cyan-500 focus:ring-0 transition-all"
-                    />
+                  <div className="flex justify-between items-center text-lg font-bold">
+                    <span className="text-gray-900">Total Amount</span>
+                    <span className="text-2xl text-blue-600">${totalPrice}</span>
                   </div>
+                  <div className="mt-2 text-sm text-gray-500">Inclusive of all taxes and insurance</div>
                 </div>
+              )}
 
-                {totalPrice > 0 && (
-                  <div className="p-6 bg-cyan-500/5 rounded-3xl border border-cyan-500/10 space-y-3">
-                    <div className="flex justify-between text-xs font-bold text-zinc-500 uppercase tracking-widest">
-                      <span>Service Duration</span>
-                      <span className="text-white">x{totalPrice/car.pricePerDay} Days</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs font-black text-cyan-500 uppercase tracking-[0.2em]">Total Payload</span>
-                      <span className="text-2xl font-black italic">${totalPrice}</span>
-                    </div>
+              {/* Book Now Button */}
+              <button
+                type="submit"
+                disabled={isBooking}
+                className={`w-full mt-6 py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 ${
+                  isBooking 
+                    ? 'bg-blue-400 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl transform hover:-translate-y-0.5'
+                } text-white shadow-lg`}
+              >
+                {isBooking ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Processing Booking...
                   </div>
+                ) : (
+                  "Confirm Booking Now"
                 )}
+              </button>
 
-                <button 
-                  disabled={isBooking}
-                  className="w-full bg-white text-black font-black uppercase tracking-[0.2em] py-5 rounded-2xl hover:bg-cyan-500 hover:text-white transition-all shadow-[0_20px_40px_rgba(0,0,0,0.4)] disabled:opacity-50"
-                >
-                  {isBooking ? "Syncing..." : "Confirm Deployment"}
+              {/* Additional Info */}
+              <div className="mt-6 space-y-3 text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Free cancellation up to 24 hours
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Insurance included
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  24/7 Roadside Assistance
+                </div>
+              </div>
+            </form>
+
+            {/* Contact & Support Card */}
+            <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl shadow-xl p-6 border border-blue-100">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Need Help?</h3>
+              <div className="space-y-4">
+                <button className="w-full flex items-center justify-center gap-2 bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-4 rounded-xl transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  Call Support: 1-800-RENT-CAR
                 </button>
-              </form>
-
-              <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
-                <div className="flex items-center gap-3 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                  <Shield size={14} className="text-cyan-500" /> Full Tactical Insurance
-                </div>
-                <div className="flex items-center gap-3 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                  <CreditCard size={14} className="text-cyan-500" /> Secure Encryption Active
-                </div>
+                <button className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  Live Chat Support
+                </button>
               </div>
             </div>
           </div>
-
         </div>
       </div>
+
+      {/* Add custom CSS for animations */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.6s ease-out;
+        }
+      `}</style>
     </div>
   ) : (
-    <div className="h-screen bg-black flex items-center justify-center"><Loading /></div>
+    <div className="min-h-screen flex items-center justify-center">
+      <Loading />
+    </div>
   );
 };
 
