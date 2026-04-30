@@ -16,6 +16,15 @@ await connectDB()
 app.use(express.json())
 app.use(cors())
 
+// Test Route
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server is running perfectly on Vercel!",
+  });
+});
+
+
 //api end point
 app.use("/api/user",userRouter)
 app.use("/api/owner",ownerRouter)
