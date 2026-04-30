@@ -6,130 +6,66 @@ import { useNavigate } from "react-router-dom";
 const CarCard = ({ car }) => {
   const navigate = useNavigate();
 
+  // Feature mapping to keep the JSX small and clean
+  const features = [
+    { label: "Seats", val: car.seating_capacity, icon: assets.users_icon, color: "from-blue-500/20 to-cyan-500/20" },
+    { label: "Fuel", val: car.fuel_type, icon: assets.fuel_icon, color: "from-emerald-500/20 to-green-500/20" },
+    { label: "Type", val: car.transmission, icon: assets.car_icon, color: "from-purple-500/20 to-pink-500/20" },
+    { label: "Loc", val: car.location, icon: assets.location_icon, color: "from-amber-500/20 to-orange-500/20" },
+  ];
+
   return (
     <motion.div
-      onClick={() => {
-        navigate(`/car-details/${car._id}`);
-        window.scrollTo(0, 0);
-      }}
-      initial={{ opacity: 0, y: 30 }}
+      onClick={() => { navigate(`/car-details/${car._id}`); window.scrollTo(0, 0); }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ 
-        scale: 1.03, 
-        y: -5,
-        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)"
-      }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="relative group overflow-hidden rounded-2xl cursor-pointer"
+      whileHover={{ y: -8 }}
+      className="relative group bg-slate-900/50 border border-white/10 rounded-2xl p-4 overflow-hidden cursor-pointer hover:bg-slate-800/80 transition-all duration-500"
     >
-      {/* Enhanced Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/20 to-emerald-900/30 group-hover:from-slate-800 group-hover:via-blue-900/30 group-hover:to-emerald-900/40 transition-all duration-500"></div>
-      
-      {/* Subtle Grid Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.1),transparent_50%)]"></div>
-      
-      {/* Glow Effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-      
-      {/* Card Content */}
-      <div className="relative z-10 p-6 flex flex-col h-full">
+      {/* Decorative Glow */}
+      <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl blur opacity-0 group-hover:opacity-10 transition duration-500" />
+
+      {/* Image Container */}
+      <div className="relative h-48 mb-4 overflow-hidden rounded-xl border border-white/5">
+        <img src={car.image} alt={car.model} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
         
-        {/* Image Section */}
-        <div className="relative rounded-xl overflow-hidden mb-6 border border-white/10">
-          <div className="aspect-video overflow-hidden rounded-xl">
-            <img
-              src={car.image}
-              alt={car.model}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-            />
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-          </div>
-
-          {/* Price Badge */}
-          <div className="absolute top-4 right-4">
-            <div className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-sm px-4 py-2 rounded-full shadow-xl shadow-blue-500/30 backdrop-blur-sm">
-              ${car.pricePerDay} <span className="text-xs font-normal opacity-90">/day</span>
-            </div>
-          </div>
-
-          {/* Availability Badge */}
-          {car.isAvaliable && (
-            <div className="absolute top-4 left-4">
-              <div className="bg-gradient-to-r from-emerald-500 to-green-500 text-white font-semibold text-xs px-3 py-1.5 rounded-full shadow-lg shadow-emerald-500/30 backdrop-blur-sm flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-                Available
-              </div>
-            </div>
-          )}
+        <div className="absolute top-2 right-2 bg-blue-600/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg">
+          ${car.pricePerDay}<span className="font-normal opacity-70">/d</span>
         </div>
 
-        {/* Title & Category */}
-        <div className="mb-5">
-          <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-cyan-200 transition-colors">
-            {car.brand} {car.model}
-          </h3>
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-gray-300 border border-white/10">
-              {car.category}
-            </span>
-            <span className="text-gray-400">•</span>
-            <span className="text-gray-400 text-sm">{car.year}</span>
+        {car.isAvaliable && (
+          <div className="absolute top-2 left-2 bg-emerald-500/90 backdrop-blur-md text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-md flex items-center gap-1">
+            <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" /> Available
           </div>
-        </div>
-
-        {/* Features Grid */}
-        <div className="mt-auto pt-5 border-t border-white/10">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-white/10 backdrop-blur-sm">
-                <img src={assets.users_icon} className="w-5 h-5 opacity-90" alt="seats" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Seats</p>
-                <p className="text-white font-medium">{car.seating_capacity}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center border border-white/10 backdrop-blur-sm">
-                <img src={assets.fuel_icon} className="w-5 h-5 opacity-90" alt="fuel" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Fuel</p>
-                <p className="text-white font-medium">{car.fuel_type}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center border border-white/10 backdrop-blur-sm">
-                <img src={assets.car_icon} className="w-5 h-5 opacity-90" alt="transmission" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Transmission</p>
-                <p className="text-white font-medium">{car.transmission}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center border border-white/10 backdrop-blur-sm">
-                <img src={assets.location_icon} className="w-5 h-5 opacity-90" alt="location" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Location</p>
-                <p className="text-white font-medium truncate">{car.location}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* View Details Button */}
-        <div className="mt-6 pt-4 border-t border-white/10">
-          <button className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-cyan-600 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40">
-            View Details
-          </button>
-        </div>
+        )}
       </div>
+
+      {/* Header */}
+      <div className="px-1">
+        <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors truncate">
+          {car.brand} <span className="font-light text-gray-400">{car.model}</span>
+        </h3>
+        <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest">{car.category} • {car.year}</p>
+      </div>
+
+      {/* Features Grid */}
+      <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-white/5">
+        {features.map((f, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${f.color} flex items-center justify-center border border-white/5`}>
+              <img src={f.icon} className="w-4 h-4 opacity-80" alt="" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] text-gray-500 leading-none mb-1">{f.label}</p>
+              <p className="text-xs text-gray-200 font-medium truncate">{f.val}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button className="w-full mt-5 py-2.5 bg-white/5 hover:bg-gradient-to-r hover:from-blue-600 hover:to-cyan-500 text-white text-sm font-semibold rounded-xl border border-white/10 transition-all duration-300">
+        View Details
+      </button>
     </motion.div>
   );
 };

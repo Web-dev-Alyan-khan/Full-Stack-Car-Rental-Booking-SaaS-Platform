@@ -1,1 +1,60 @@
-node_modules
+# ===============================
+# Node modules
+# ===============================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===============================
+# Environment variables
+# ===============================
+.env
+.env.local
+.env.development
+.env.production
+
+# ===============================
+# Logs
+# ===============================
+logs/
+*.log
+
+# ===============================
+# OS files
+# ===============================
+.DS_Store
+Thumbs.db
+
+
+
+# ===============================
+# IDE / Editor settings
+# ===============================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+
+
+# ===============================
+# Database files
+# ===============================
+*.sqlite
+*.db
+*.json.backup
+
+# ===============================
+# Cloud / secrets
+# ===============================
+firebase.json
+serviceAccountKey.json
+
+# ===============================
+# Package lock (OPTIONAL)
+# ===============================
+# package-lock.json   # uncomment if you don't want it pushed
+# yarn.lock

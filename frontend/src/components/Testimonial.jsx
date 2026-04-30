@@ -1,64 +1,61 @@
 import React from "react";
 import { assets } from "../assets/assets";
-import Title from "./Title";
 import { motion } from "framer-motion";
-
-const Star = ({ filled }) => (
-  <span className={filled ? "text-yellow-400" : "text-gray-400"}>
-    ★
-  </span>
-);
+import { Quote, Star as StarIcon } from "lucide-react";
 
 const Testimonial = () => {
   const testimonials = [
     {
       name: "ALYAN KHAN",
-      role: "Car Owner",
+      role: "Luxury Car Owner",
       rating: 5,
       image: assets.alyan,
-      review: "Excellent platform! I listed my car and started earning within a week. The verification process is smooth and professional.",
+      review: "The most seamless listing process I've ever experienced. My fleet is now generating passive income while being handled with total care.",
     },
     {
       name: "SHAYAN KHAN",
-      role: "Renter",
-      rating: 4,
+      role: "Elite Member",
+      rating: 5,
       image: "/shayan.jpg",
-      review: "Booking a car was super easy. The entire rental process felt safe and transparent. Highly recommended!",
+      review: "Booking a high-performance vehicle has never been this transparent. The service is fast, secure, and truly world-class.",
     },
     {
       name: "SAFWAN KHAN",
       role: "Car Owner",
       rating: 5,
       image: "/safwan.jpg",
-      review: "The platform manages insurance & payments, so I earn stress-free income. Great service and support team!",
+      review: "Insurance and logistics are handled perfectly. I earn stress-free income while my vehicle stays in showroom condition.",
     },
   ];
 
   return (
-    <div className="relative py-24 overflow-hidden">
-      {/* Stunning Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50"></div>
-      <div className="absolute top-10 left-10 w-72 h-72 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-      <div className="absolute bottom-10 right-10 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-1000"></div>
+    <section className="relative py-28 bg-[#05070A] overflow-hidden">
       
+      {/* --- DASHBOARD BACKGROUND ELEMENTS --- */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Animated Orbs */}
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] animate-pulse delay-1000"></div>
+        
+        {/* Tech Grid Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+      </div>
+
       <div className="relative z-10 max-w-7xl mx-auto px-6">
-        {/* Title Section */}
-        <div className="text-center mb-16">
-          <div className="inline-block mb-6">
-            <span className="text-sm font-semibold text-cyan-600 bg-gradient-to-r from-cyan-100 to-blue-100 px-6 py-2 rounded-full border border-cyan-300">
-              TESTIMONIALS
+        
+        {/* --- HEADER --- */}
+        <div className="text-center mb-20">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <span className="text-[10px] font-black text-cyan-400 tracking-[0.4em] uppercase bg-cyan-500/10 border border-cyan-500/20 px-4 py-2 rounded-full">
+              User Insights
             </span>
-          </div>
-          
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-blue-800 bg-clip-text text-transparent mb-4">
-            What Our Customers Say
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover why discerning travelers choose StayVenture for their luxury accommodation around the world
-          </p>
+            <h2 className="mt-6 text-5xl md:text-6xl font-black text-white tracking-tight">
+              DRIVER <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">TESTIMONIALS</span>
+            </h2>
+          </motion.div>
         </div>
 
-        {/* Testimonial Cards */}
+        {/* --- TESTIMONIAL GRID --- */}
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((item, index) => (
             <motion.div
@@ -66,85 +63,76 @@ const Testimonial = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -10 }}
-              className="group relative"
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -5 }}
+              className="relative group"
             >
-              {/* Card Gradient Border */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+              {/* External Neon Glow */}
+              <div className="absolute -inset-0.5 bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-500 rounded-3xl blur opacity-20 group-hover:opacity-50 transition duration-500"></div>
               
-              {/* Main Card */}
-              <div className="relative bg-white rounded-2xl shadow-xl border border-gray-200 p-8 hover:shadow-2xl transition-all duration-300">
+              {/* Inner Card Container */}
+              <div className="relative h-full bg-gray-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 overflow-hidden">
                 
-                {/* Quote Icon */}
-                <div className="absolute top-6 right-6 text-5xl text-blue-100 font-serif">"</div>
-                
-                {/* Rating */}
-                <div className="flex mb-6 text-2xl">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} filled={star <= item.rating} />
+                {/* Floating Quote Icon */}
+                <Quote className="absolute top-6 right-8 w-12 h-12 text-white/5 group-hover:text-cyan-500/10 transition-colors" />
+
+                {/* Star Rating */}
+                <div className="flex gap-1 mb-6">
+                  {[...Array(5)].map((_, i) => (
+                    <StarIcon 
+                      key={i} 
+                      size={16} 
+                      className={i < item.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-600"} 
+                    />
                   ))}
                 </div>
 
-                {/* Review Text */}
-                <p className="text-gray-700 leading-relaxed text-lg mb-8 italic">
+                <p className="text-gray-300 text-lg leading-relaxed italic mb-8 relative z-10">
                   "{item.review}"
                 </p>
 
                 {/* User Info */}
-                <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur opacity-50"></div>
+                <div className="flex items-center gap-4 pt-6 border-t border-white/5">
+                  <div className="relative h-14 w-14">
+                    <div className="absolute inset-0 bg-cyan-500/30 rounded-full blur-sm"></div>
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="relative w-16 h-16 rounded-full object-cover border-4 border-white shadow-lg"
+                      className="relative h-full w-full rounded-full object-cover border-2 border-white/20"
                     />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">{item.name}</h3>
-                    <p className="text-sm text-gray-600 flex items-center gap-2">
-                      <span className="inline-block w-2 h-2 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"></span>
-                      {item.role}
-                    </p>
+                    <h3 className="text-white font-bold text-sm tracking-wide">{item.name}</h3>
+                    <p className="text-cyan-400 text-[10px] font-black uppercase tracking-widest">{item.role}</p>
                   </div>
                 </div>
 
-                {/* Hover Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-blue-50/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                {/* Interactive Bottom Shine */}
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Stats Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6"
-        >
+        {/* --- STATS SECTION --- */}
+        <div className="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { value: "4.9/5", label: "Average Rating", color: "from-cyan-500 to-blue-500" },
-            { value: "2K+", label: "Happy Customers", color: "from-purple-500 to-pink-500" },
-            { value: "98%", label: "Satisfaction Rate", color: "from-green-500 to-emerald-500" },
-            { value: "24/7", label: "Support Available", color: "from-amber-500 to-orange-500" }
-          ].map((stat, index) => (
-            <div 
-              key={index}
-              className="bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 p-6 text-center hover:shadow-lg transition-all duration-300"
-            >
-              <div className={`text-3xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2`}>
-                {stat.value}
+            { v: "4.9/5", l: "Rating", c: "from-blue-400 to-cyan-400" },
+            { v: "15K+", l: "Happy Clients", c: "from-purple-400 to-pink-400" },
+            { v: "98%", l: "Success Rate", c: "from-emerald-400 to-teal-400" },
+            { v: "24/7", l: "Elite Support", c: "from-amber-400 to-orange-400" }
+          ].map((stat, i) => (
+            <div key={i} className="bg-white/[0.02] border border-white/5 p-6 rounded-2xl text-center backdrop-blur-sm">
+              <div className={`text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r ${stat.c}`}>
+                {stat.v}
               </div>
-              <div className="text-gray-600 font-medium">
-                {stat.label}
-              </div>
+              <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-2">{stat.label}</div>
             </div>
           ))}
-        </motion.div>
+        </div>
+
       </div>
-    </div>
+    </section>
   );
 };
 
